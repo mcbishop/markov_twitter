@@ -69,23 +69,28 @@ def tweet(chains):
                       access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
                       access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
 
-    print api.VerifyCredentials()
+    #print api.VerifyCredentials()
 
     status = api.PostUpdate(chains)
     print status.text
 
 # Get the filenames from the user through a command line prompt, ex:
 # python markov.py green-eggs.txt shakespeare.txt
-#filenames = sys.argv[1:]
+filenames = sys.argv[1:]
 
 # Open the files and turn them into one long string
-# text = open_and_read_file(filenames)
+text = open_and_read_file(filenames)
 
 # Get a Markov chain
-# chains = make_chains(text)
+chains = make_chains(text)
 
+tweet_text = make_text(chains)
+
+#print tweet_text
+#print type(tweet_text)
+#print (tweet_text[:139])
 # Your task is to write a new function tweet, that will take chains as input
-tweet('Test tweet from python twitter. Hello world.')
+tweet(tweet_text[:139])
 
 
 

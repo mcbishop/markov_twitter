@@ -73,6 +73,36 @@ def make_text(chains, char_limit = 140):
     return text
 
 
+def clean_end(text):
+    """Removes text after last occurance of end or near-end punctionation. Defaults to comma or last space if none found. """
+ 
+
+    punct = (
+        ".", 
+        ";", 
+        "?", 
+        "!",
+        ":",
+        )
+
+    punct_index = [text.rfind(p) for p in punct]
+    print punct_index
+    cleaned_end = max(punct_index)+1
+    if cleaned_end < 1:
+        # check for last comma
+        comma_index = text.rfind(",")
+        cleaned_end = comma_index+1
+        #check for last space
+        if comma_index < 1:
+            space_index = text.rfind(" ")
+            cleaned_end = space_index
+
+
+    text_cleaned = text[:cleaned_end]
+
+    return text_cleaned
+
+
 def tweet(chains):
     # Use Python os.environ to get at environmental variables
     # Note: you must run `source secrets.sh` before running this file
@@ -100,11 +130,12 @@ chains = make_chains(text)
 
 tweet_text = make_text(chains)
 
+tweet_text_cleaned = clean_end(tweet_text)
 #print tweet_text
 #print type(tweet_text)
 #print (tweet_text[:139])
 # Your task is to write a new function tweet, that will take chains as input
-tweet(tweet_text[:139])
+tweet(tweet_text_cleaned)
 
 
 

@@ -86,7 +86,6 @@ def clean_end(text):
         )
 
     punct_index = [text.rfind(p) for p in punct]
-    print punct_index
     cleaned_end = max(punct_index)+1
     if cleaned_end < 1:
         # check for last comma

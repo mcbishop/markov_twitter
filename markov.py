@@ -40,23 +40,37 @@ def make_chains(text_string):
     return chains
 
 
-def make_text(chains):
-    """Takes dictionary of markov chains; returns random text."""
+def make_text(chains, char_limit = 140):
+    """Takes dictionary of markov chains; returns random text.
 
-    key = choice(chains.keys())
-    words = [key[0], key[1]]
-    while key in chains:
-        # Keep looping until we have a key that isn't in the chains
-        # (which would mean it was the end of our original text)
-        #
-        # Note that for long texts (like a full book), this might mean
-        # it would run for a very long time.
+    Random text will begin with a capital letter.
+    
+    char_limit will stop word addition loosely (but possibly exceeding)
+    the character count.  Text is then truncated, possibly mid word, to enforce that limit.
 
-        word = choice(chains[key])
-        words.append(word)
-        key = (key[1], word)
+    """
 
-    return " ".join(words)
+    text = ""
+
+    first_ngram = choice(chains.keys()) 
+    #check to see if choice first index starts with capital letter and is camelcased
+    while not ((first_ngram[1][0].isupper())): #and (first_ngram[1][1].islower())):
+        first_ngram = choice(chains.keys())
+
+    ngram = first_ngram
+    text += ngram[1]
+    char_count = 0
+    while ((ngram in chains) and char_count < char_limit):
+        end_words = ngram[1:] 
+        new_word = choice(chains[ngram])
+        new_key = end_words+(new_word,) 
+        text += " {}".format(new_word)  
+        ngram = new_key
+        char_count+=len(new_word)
+    
+    text = text[:char_limit]
+
+    return text
 
 
 def tweet(chains):
